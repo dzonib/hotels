@@ -8,8 +8,6 @@ import Loading from './Loading'
 export default function RoomsContainer() {
     const { loading, sortedRooms, rooms } = useContext(RoomContext)
 
-    console.log(loading)
-    
     if (loading) {
         return <Loading />
     } else {

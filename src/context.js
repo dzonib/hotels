@@ -9,7 +9,16 @@ function RoomProvider({ children }) {
         rooms: [],
         sortedRooms: [],
         featuredRooms: [],
-        loading: true
+        loading: true,
+        type: 'all',
+        capacity: 1,
+        price: 0,
+        minPrice: 0,
+        maxPrice: 0,
+        minSize: 0,
+        maxSize: 0,
+        breakfast: false,
+        pets: false
     }
 
     const [state, modifyState] = useState(initialState)
@@ -17,11 +26,21 @@ function RoomProvider({ children }) {
     useEffect(() => {
         const formatedRooms = formatData(items)
         const featuredRooms = formatedRooms.filter(room => room.featured)
+
+        // get most expensive room price and spread array into int value
+        let maxPrice = Math.max(...formatedRooms.map(item => item.price))
+
+        let maxSize = Math.max(...formatedRooms.map(item => item.size))
+
+        console.log(maxPrice)
         modifyState({
             rooms: formatedRooms,
             sortedRooms: formatedRooms,
             featuredRooms,
-            loading: false
+            loading: false,
+            price: maxPrice,
+            maxPrice,
+            size: maxSize
         })
     }, [])
 
@@ -44,8 +63,20 @@ function RoomProvider({ children }) {
         return room
     }
 
+    function handleChange(event) {
+        const type = event.target.type
+        const name = event.target.name
+        const value = event.target.value
+
+        console.log(type, name, value)
+    }
+
+    function filterRooms(event) {
+        console.log('hello')
+    }
+
     return (
-        <RoomContext.Provider value={{ ...state, getRoom }}>
+        <RoomContext.Provider value={{ ...state, getRoom, handleChange }}>
             {children}
         </RoomContext.Provider>
     )
