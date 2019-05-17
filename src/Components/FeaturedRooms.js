@@ -5,6 +5,7 @@ import Room from './Room'
 import Title from './Title'
 
 export default function FeaturedRooms() {
+    
     // get value u provided in context file
     const { featuredRooms: rooms, loading } = useContext(RoomContext)
 

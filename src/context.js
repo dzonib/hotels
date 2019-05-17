@@ -32,7 +32,6 @@ function RoomProvider({ children }) {
 
         let maxSize = Math.max(...formatedRooms.map(item => item.size))
 
-        console.log(maxPrice)
         modifyState({
             rooms: formatedRooms,
             sortedRooms: formatedRooms,
