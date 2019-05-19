@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react'
-import items from './data'
+import Client from './Contentful'
+
 
 const RoomContext = createContext()
 
@@ -24,24 +25,37 @@ function RoomProvider({ children }) {
     const [state, modifyState] = useState(initialState)
 
     useEffect(() => {
-        const formatedRooms = formatData(items)
-        const featuredRooms = formatedRooms.filter(room => room.featured)
-
-        // get most expensive room price and spread array into int value
-        let maxPrice = Math.max(...formatedRooms.map(item => item.price))
-
-        let maxSize = Math.max(...formatedRooms.map(item => item.size))
-
-        modifyState({
-            rooms: formatedRooms,
-            sortedRooms: formatedRooms,
-            featuredRooms,
-            loading: false,
-            price: maxPrice,
-            maxPrice,
-            size: maxSize
-        })
+        getData()
     }, [])
+
+    async function getData() {
+        try {
+            let response = await Client.getEntries({
+                content_type: "beachResortRoom"
+            })
+
+            const formatedRooms = formatData(response.items)
+            const featuredRooms = formatedRooms.filter(room => room.featured)
+    
+            // get most expensive room price and spread array into int value
+            let maxPrice = Math.max(...formatedRooms.map(item => item.price))
+    
+            let maxSize = Math.max(...formatedRooms.map(item => item.size))
+    
+            modifyState({
+                rooms: formatedRooms,
+                sortedRooms: formatedRooms,
+                featuredRooms,
+                loading: false,
+                price: maxPrice,
+                maxPrice,
+                size: maxSize
+            })
+        } catch(e) {
+            console.log(e)
+        }
+    }
+
 
     function formatData(items) {
         let tempItems = items.map(item => {
@@ -68,10 +82,6 @@ function RoomProvider({ children }) {
         const value = event.target.value
 
         console.log(type, name, value)
-    }
-
-    function filterRooms(event) {
-        console.log('hello')
     }
 
     return (
